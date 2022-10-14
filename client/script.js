@@ -10,7 +10,7 @@
 */
 
 // CODE HERE
-
+const sayHelloButton = document.querySelector('#say-hello-button')
 
 // PROBLEM 2
 /*
@@ -20,8 +20,18 @@
 */
 
 // CODE HERE
+const styles = document.querySelector('style')
 
+styles.textContent = styles.textContent + '.changeColor {background-color: black; color: white;}'
 
+function changeColor(event) {
+    event.preventDefault()
+
+    // event.target.classList.remove('origColor')
+    event.target.classList.add('changeColor')
+}
+
+sayHelloButton.addEventListener('mouseover', changeColor)
 // PROBLEM 3
 /*
     Now you can see that the button colors change, but they do not change back when we take the mouse off of the button.
@@ -32,8 +42,14 @@
 */
 
 // CODE HERE
+function origColor(event) {
+    event.preventDefault()
 
+    event.target.classList.remove('changeColor')
+    // event.target.classList.add('origColor')
+}
 
+sayHelloButton.addEventListener('mouseout', origColor)
 // PROBLEM 4
 /*
     Now lets see if we can make a request to our server when we click the button
@@ -53,7 +69,7 @@ const sayHello = () => {
 // DO NOT EDIT FUNCTION
 
 // CODE HERE
-
+sayHelloButton.addEventListener('click', sayHello)
 
 // PROBLEM 5 
 /*
@@ -67,7 +83,20 @@ const sayHello = () => {
 */ 
 
 const ohMy = () => {
-    // YOUR CODE HERE
+    axios.get('http://localhost:3000/animals').then((response) => {
+        // console.log(response.data)
+
+        const docBody = document.querySelector('body')
+
+        for (let i = 0; i < response.data.length; i++) {
+            const newP = document.createElement('p')
+            newP.textContent = response.data[i]
+            docBody.appendChild(newP)
+        }
+
+    }).catch((error) => {
+        console.log(error)
+    })
 }
 
 document.getElementById('animals-button').addEventListener('click', ohMy)
@@ -87,8 +116,19 @@ document.getElementById('animals-button').addEventListener('click', ohMy)
 */
 
 const repeatMyParam = () => {
-    //YOUR CODE HERE
+    axios.get('http://localhost:3000/repeat/' + 'a string').then((response) => {
+        console.log(response)
+        const repeatText = document.querySelector('#repeat-text')
+        repeatText.textContent = response.data
+        repeatText.style.display = 'block'
+    }).catch((error) => {
+        console.log(error)
+    })
 }
+
+const repeatBtn = document.querySelector('#repeat-button')
+
+repeatBtn.addEventListener('click', repeatMyParam)
 
 // PROBLEM 7
 /*
@@ -113,8 +153,16 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE
+function queryTest() {
+    axios.get('http://localhost:3000/query-test/?x=1&y=2').then((response) => {
+        console.log(response)
+    }).catch((error) => {
+        console.log(error)
+    })
+}
 
-
+const queryBtn = document.querySelector('#query-button')
+queryBtn.addEventListener('click', queryTest)
 
 ////////////////
 //INTERMEDIATE//
@@ -166,3 +214,38 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE 
+let foodArray = []
+
+function createFood(event) {
+    event.preventDefault()
+
+    const foodInput = document.querySelector('input')
+    const body = {
+        newFood: foodInput.value
+    }
+    axios.post('http://localhost:3000/food', body).then((response) => {
+        console.log(response.data)
+        foodArray = response.data
+        listFood(foodArray)
+    }).catch((error) => {
+        console.log(error)
+    })
+    foodInput.value = ''
+}
+
+const foodForm = document.querySelector('form')
+foodForm.addEventListener('submit', createFood)
+
+const foodElement = document.querySelector('#food-list')
+
+function listFood(array) {
+    
+    console.log(array)
+    foodElement.innerHTML = ''
+
+    for (let i = 0; i < array.length; i++) {
+        const newP = document.createElement('p')
+        newP.textContent = array[i]
+        foodElement.appendChild(newP)
+    }
+}

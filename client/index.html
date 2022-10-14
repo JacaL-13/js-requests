@@ -16,9 +16,21 @@
             font-size: xx-large;
             display: none;
         }
+        form {
+            height: 50px;
+            display: flex;
+            align-items: center;
+        }
+        input {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
+    <form>
+        <input type="text" placeholder="Enter a food item">
+        <button>Add to list</button>
+    </form>
     <button id='say-hello-button'>say hello!</button>
     <button id='animals-button'>oh my!</button>
     <button id='repeat-button'>repeat my param</button>
@@ -26,5 +38,6 @@
 
     <p id='hello-text'>Hello World!</p>
     <p id='repeat-text'></p>
+    <section id="food-list"></section>
 </body>
 </html>
